@@ -1,0 +1,11 @@
+
+{% block content %}
+  <form action="{% url 'utareas:tadd' %}" method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <input type="submit" value="Añadir tarea" />
+</form>
+
+<h4> Haga click <a href="{% url 'utareas:tlist'  %}">aquí</a> para ver el listado de tareas. </h4>
+<h4> Haga click <a href="{% url 'utareas:tindex'  %}">aquí</a> para volver al inicio. </h4>
+{% endblock %}
