@@ -9,7 +9,7 @@ import time
 @receiver(post_save, sender=tareas)
 def index_post(sender, instance, **kwargs):
     instance.indexing()
-    #time.sleep(5)
+    time.sleep(2)
     #search.cambiaDato()
     #search.makeDash()
 #     es = Elasticsearch()

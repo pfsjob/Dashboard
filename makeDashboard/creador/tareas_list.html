@@ -5,7 +5,7 @@
 <form action="{% url 'utareas:tdelete' %}" method="post">
 {% csrf_token %}
     {% for tarea in object_list %}
-      <li>{{ tarea.usuario }} - {{ tarea.repositorio }} - {{ tarea.estado }}      BORRAR <input type="submit" name="delete" value="{{tarea.usuario}}-{{tarea.repositorio}}" value="BORRAR"/></li>
+      <li>{{ tarea.usuario }} - {{ tarea.repositorio }} - {{ tarea.estado }}     BORRAR <input type="submit" name="delete" value="{{tarea.usuario}}-{{tarea.repositorio}}" value="BORRAR"/></li>
     {% endfor %}
 </form>
   </ul>
