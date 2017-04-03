@@ -3,16 +3,14 @@ from elasticsearch_dsl import DocType, Text, Boolean, String
 from elasticsearch.helpers import bulk
 from elasticsearch import Elasticsearch
 import elasticsearch_dsl
-from . import models
 import shlex, subprocess
 
 connections.create_connection()
 
 class tareasIndex(DocType):
-    usuario = String()
-    repositorio = String()
-    estado = Boolean()
-    
+        usuario = String()
+        repositorio = String()
+        estado = Boolean()
     
 # def bulk_indexing():
 #     print("DENTRO")

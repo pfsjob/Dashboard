@@ -13,7 +13,7 @@ from .search import tareasIndex
 class tareas(models.Model):
     usuario=models.CharField(max_length=100)
     repositorio=models.CharField(max_length=100)
-    estado=models.BooleanField(default=True)
+    estado=models.BooleanField(default=False)
     
     
     def indexing(self):
