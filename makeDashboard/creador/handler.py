@@ -4,8 +4,13 @@
 import shlex, subprocess
 from elasticsearch import Elasticsearch
 import elasticsearch_dsl
-from .search import tareasIndex
+from elasticsearch_dsl import DocType, String, Boolean
 
+
+class tareasIndex(DocType):
+        usuario = String()
+        repositorio = String()
+        estado = Boolean()
 
 es = Elasticsearch()
 requ = elasticsearch_dsl.Search(using=es, index='tareas')#, doc_type='summary')

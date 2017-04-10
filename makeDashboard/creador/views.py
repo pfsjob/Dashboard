@@ -1,4 +1,4 @@
-from django.shortcuts import render, render_to_response
+from django.shortcuts import render, render_to_response, redirect
 from django.template import Context
 
 # Create your views here.
@@ -11,6 +11,8 @@ from .search import tareasIndex
 from elasticsearch import Elasticsearch
 import elasticsearch_dsl
 import time
+import requests
+import json
 
 class TareaList(ListView):
     model = tareas
@@ -18,16 +20,42 @@ class TareaList(ListView):
 def index(request):
     return render_to_response('index.html')
 
+def indexregistrado(request):
+
+    client_id='bd2ade5d39bb1b529fb7'
+    client_secret='35b46ffbac1f02ea2ca84f44d2450fd00ffd6f40'
+    codigo = request.GET.get('code')
+    print(codigo)
+    url = 'https://github.com/login/oauth/access_token'
+    header = {'content-type':'application/json'}
+    payload = {}
+    payload['client_id']=client_id
+    payload['client_secret']=client_secret
+    payload['code']=codigo
+
+    res = requests.post(
+        url,
+        data = json.dumps(payload),
+        headers=header
+        )
+    
+    #print(res.content)
+    #j = json.dumps(res.text)
+    return HttpResponse(res.content)
+#     print(j)
+#     token = j['token']
+#     print ('New token: %s' % token)
+
+def redirigir(request):
+    return redirect('https://github.com/login/oauth/authorize?client_id=bd2ade5d39bb1b529fb7')
+    
+
 def lista_tareas(request):
     es = Elasticsearch()
     req = elasticsearch_dsl.Search(using=es, index='tareas')#, doc_type='summary')
     req = req.source(['usuario', 'repositorio', 'estado'])
     resp = req.scan()
-#     lista=[]
-#     for commit in response:
-#         t=tareas(commit.usuario,commit.repositorio,commit.estado)
-#         lista.append(t)
-#     print(lista)
+    
     return render(request, 'tareas_list.html', {'object_list': resp})
 
 def add_tarea(request):

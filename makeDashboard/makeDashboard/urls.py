@@ -15,10 +15,15 @@ Including another URLconf
 """
 from django.conf.urls import include, url
 from django.contrib import admin
+from social_django.urls import urlpatterns as social_django_urls
+from creador import views
+
 
 urlpatterns = [
     url(r'^creador/', include('creador.urls')),
     url(r'^admin/', admin.site.urls),
     url(r'^tareas/', include('creador.urls', namespace="utareas")),
-    #url(r'^/', include('creador.urls', namespace="utareas")),
+    url(r'^oauth/complete/github/', views.indexregistrado ),
+    url(r'^oauth/', include('social_django.urls', namespace='social')),
+    #url(r'^oauth/complete/github/', views.indexregistrado ),
 ]
