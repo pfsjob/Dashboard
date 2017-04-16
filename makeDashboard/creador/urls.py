@@ -7,6 +7,7 @@ urlpatterns = [
     #url(r'^indexreg/', views.indexregistrado, name='tindex'),
     #url(r'^oauth/', include('social_django.urls', namespace='social')),
     url(r'^lista/$', views.lista_tareas, name='tlist'),
+    url(r'^listausuario/', views.lista_tareas_usuario, name='tlistu'),
     url(r'^add/$', views.add_tarea, name='tadd'),
     url(r'^delete/$', views.delete_tarea, name='tdelete'),
     url(r'^inicio/$', views.redirigir, name='tinicio'),

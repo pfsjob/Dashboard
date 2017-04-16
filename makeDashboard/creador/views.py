@@ -2,7 +2,7 @@ from django.shortcuts import render, render_to_response, redirect
 from django.template import Context
 
 # Create your views here.
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from creador.models import tareasForm
 from django.core.urlresolvers import reverse
 from django.views.generic import ListView
@@ -48,15 +48,33 @@ def indexregistrado(request):
 
 def redirigir(request):
     return redirect('https://github.com/login/oauth/authorize?client_id=bd2ade5d39bb1b529fb7')
+
+def lista_tareas_usuario(request):
+    usuario=request.path.split('/tareas/listausuario/')
+    url='https://api.github.com/users/'+usuario[1]+'/repos'
+    res = requests.get(
+        url,
+        #data = json.dumps(payload),
+        )
+    #print(res.content)
+    salidaaux=json.loads(res.content)#,indent=2)
+    salida=json.dumps(salidaaux,indent=2)
+    for x in salidaaux:
+        print(x['name'])
+    return HttpResponse(salida, content_type='application/json')
     
 
 def lista_tareas(request):
     es = Elasticsearch()
     req = elasticsearch_dsl.Search(using=es, index='tareas')#, doc_type='summary')
-    req = req.source(['usuario', 'repositorio', 'estado'])
-    resp = req.scan()
-    
-    return render(request, 'tareas_list.html', {'object_list': resp})
+    resp = req.execute()
+    salida = json.dumps(resp.to_dict(), indent=2)
+    #print(salida)
+    return HttpResponse(salida, content_type='application/json')
+#     req = req.source(['usuario', 'repositorio', 'estado'])
+#     resp = req.scan()
+#     
+#     return render(request, 'tareas_list.html', {'object_list': resp})
 
 def add_tarea(request):
     if request.method == 'POST':
@@ -66,7 +84,8 @@ def add_tarea(request):
             return HttpResponseRedirect(reverse('utareas:tlist'))
     else:
         form = tareasForm()
-
+        
+    
     return render(request, 'tarea_form.html', {'form': form})
 
 def delete_tarea(request):

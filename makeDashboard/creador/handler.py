@@ -5,6 +5,8 @@ import shlex, subprocess
 from elasticsearch import Elasticsearch
 import elasticsearch_dsl
 from elasticsearch_dsl import DocType, String, Boolean
+import time
+from datetime import datetime
 
 
 class tareasIndex(DocType):
@@ -20,15 +22,19 @@ resp = requ.scan()
 for commit in resp:
     if commit.estado==False:
         print("Empezando a ejecutar...")
-#         repo_url = 'https://github.com/'+commit.usuario+'/'+commit.repositorio+'.git'
-#         cmd = "p2o.py --enrich --index git_raw --index-enrich git \-e http://localhost:9200 --no_inc --debug \git "+repo_url+""
-#         cmd = shlex.split(cmd)
-#         subprocess.call(cmd)
-#         
-#         cmd3 = "kidash.py --elastic_url-enrich http://locahost:9200 \--import /tmp/git-dashboard.json"
-#         cmd3 = shlex.split(cmd3)
-#         subprocess.call(cmd3)
         req = tareasIndex.get(id=commit.usuario+"-"+commit.repositorio, using=es, index='tareas')
-        req.update(estado=True)
+        req.update(using=es, inicioEjecucion=datetime.now())
+        repo_url = 'https://github.com/'+commit.usuario+'/'+commit.repositorio+'.git'
+        cmd = "p2o.py --enrich --index git_raw --index-enrich git \-e http://localhost:9200 --no_inc --debug \git "+repo_url+""
+        cmd = shlex.split(cmd)
+        p1 = subprocess.Popen(cmd)
+#         
+        cmd3 = "kidash.py --elastic_url-enrich http://locahost:9200 \--import /tmp/git-dashboard.json"
+        cmd3 = shlex.split(cmd3)
+        p2 = subprocess.Popen(cmd3)
+        p1.wait()
+        p2.wait()
+        #req = tareasIndex.get(id=commit.usuario+"-"+commit.repositorio, using=es, index='tareas')
+        req.update(using=es, estado=True, finEjecucion=datetime.now())
     else:
         print("Tarea ya realizada")

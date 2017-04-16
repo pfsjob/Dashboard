@@ -1,5 +1,5 @@
 from elasticsearch_dsl.connections import connections
-from elasticsearch_dsl import DocType, Text, Boolean, String
+from elasticsearch_dsl import DocType, Text, Boolean, String, Date
 from elasticsearch.helpers import bulk
 from elasticsearch import Elasticsearch
 import elasticsearch_dsl
@@ -10,6 +10,9 @@ connections.create_connection()
 class tareasIndex(DocType):
         usuario = String()
         repositorio = String()
+        fechaRegistro = Date()
+        inicioEjecucion = String()
+        finEjecucion = Date()
         estado = Boolean()
     
 # def bulk_indexing():
